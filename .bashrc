@@ -8,10 +8,34 @@ case $- in
       *) return;;
 esac
 
-#For now, skip out on bash and start ipython. We do this here because chsh does not like ipython.
-#Also, run the bash_aliases script here, so that ipython has access to the path modifications there.
-. ~/.bash_aliases
-exec /usr/bin/ipython3 --profile kuroshell
+# Only do ipython magic if NOT the root user.
+
+if [ "$(id -u)" != "0" ]; then
+    # Function to check current version of glibc for ipython stuff.
+    function version_gt() { test "$(echo "$@" | tr " " "\n" | sort -V | tail -n 1)" == "$1"; }
+
+    # I use ipython as my shell, but chsh doesn't like it (ipython isn't really
+    # meant to be used as a shell, after all). On my local machines, just installing
+    # ipython is usually enough, but on RCAC machines, I need to run it from my home
+    # directory, assuming they're all up to date. Otherwise, I need to run Bash.
+
+    # First check if ipython3 is installed. If so, just load it.
+    if command -v ipython3 >/dev/null 2>&1; then
+        # Load bash aliases for PATHS and such
+        if [ -f ~/.bash_aliases ]; then
+            . ~/.bash_aliases
+        fi
+        exec `command -v ipython3` --profile kuroshell
+    # If ipyhon3 is not installed, see if I have a venv set up in my home directory.
+    elif [ -f ~/Programs/env-python3-home/bin/activate ]; then
+        # If I do, then make sure the version of glibc is new enough to run it.
+        if version_gt `ldd --version | grep ldd | cut -d' ' -f4` 2.9; then
+            # If so, go ahead and run it.
+            . ~/Programs/env-python3-home/bin/activate
+            exec ipython --profile kuroshell
+        fi 
+    fi
+fi
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -62,7 +86,12 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    #Different prompts if root or not
+    if [ "$(id -u)" != "0" ]; then
+        PS1='\[\033[0;35m\][bash]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    else
+        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]# '
+    fi
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
