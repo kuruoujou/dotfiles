@@ -7,4 +7,4 @@
 %alias rmkey (ssh-keygen -f "/home/kuroshi/.ssh/known_hosts" -R %s)
 %alias socks (ssh -f -N -D 1080 fgl.ramblingahoge.net)
 %alias m (ssh -Y krypton firefox -url %s.rosen;)
-%alias runningjobs (qstat -r | cut -d '.' -f1 | awk 'NR > 5 {printf \"%s \",\$0}')
+%alias runningjobs (qstat -r | cut -d '.' -f1 | awk 'NR > 5')
