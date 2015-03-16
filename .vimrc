@@ -1,6 +1,7 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 " set the runtime path to include Vundle and initialize
+if v:version > 701
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
@@ -26,7 +27,7 @@ Plugin 'sjl/gundo.vim'
 Plugin 'kien/ctrlp.vim'
 " Useful version control commands (maybe?)
 Plugin 'vim-scripts/vcscommand.vim'
-" Useful command alising stuff.
+" Useful command aliasing stuff.
 Plugin 'vim-scripts/cmdalias.vim'
 " JSON proper syntax highlighting and indention, also some quote magic.
 Plugin 'elzr/vim-json'
@@ -34,7 +35,7 @@ Plugin 'elzr/vim-json'
 " Enable for vundle to maintain, otherwise.
 " Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim'}
 call vundle#end()
-
+endif
 "" Shortcuts
 " Map my leader key to space.
 let mapleader=" "
@@ -102,9 +103,11 @@ set tabstop=4               " <tab> inserts 4 spaces
 set softtabstop=4           " backspace over autoindent deletes both spaces
 set expandtab               " Use spaces instead of tabs for autoindent
 set shiftround              " Round indent to a multiple of shiftwidth
-set textwidth=80            " 80 column line limit
+"set textwidth=80            " 80 column line limit
 set formatoptions=tcroql    " Set text and comment formatting to auto
-let &colorcolumn=81         " Highlight the 81st line
+if exists('+colorcolumn')
+    let &colorcolumn=81         " Highlight the 81st line
+endif
 hi ColorColumn ctermbg=23  
 set splitbelow              " Open new split panes below...
 set splitright              " ...and to the right.
@@ -154,5 +157,7 @@ let g:ctrlp_custom_ignore = {
 set t_Co=256
 
 "Setup persistant undo
-set undofile
-set undodir=~/.vim/undo//,~/.vim_undo//,~/tmp//
+if has('persistent_undo')
+    set undofile
+    set undodir=~/.vim/undo//,~/.vim_undo//,~/tmp//
+endif
