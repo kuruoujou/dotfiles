@@ -1,0 +1,9 @@
+termcapinfo xterm ti@:te@
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%l %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}%Y-%m-%d %{W}%c %{g}]'
+screen -t tab01 1
+screen -t tab02 2
+screen -t tab03 3
+screen -t tab04 4
+startup_message off
+msgwait 1
