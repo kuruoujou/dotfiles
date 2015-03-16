@@ -1,0 +1,8 @@
+def start_server(port=8000, bind="", cgi=False):
+    import http.server
+    if not cgi:
+        http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler,
+        port=port, bind=bind)
+    else:
+        http.server.test(HandlerClass=http.server.CGIHTTPRequestHandler,
+        port=port, bind=bind)

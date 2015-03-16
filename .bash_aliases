@@ -1,6 +1,7 @@
 #Aliases
 alias "s"="ssh -Y "
 alias "v"="vim"
+alias "p"="puppet agent --test --pluginsync"
 alias "fusb"="sudo chmod -R a+rwx /dev/bus/usb"
 alias "newpass"="openssl rand -base64 32"
 alias "chmox"="chmod +x"
